@@ -2,7 +2,7 @@ class RequestLogger
 
   def initialize(app, filename)
     @app = app
-    @f = File.open(filename, 'w+')
+    @f = File.open(filename, File::WRONLY | File::CREAT | File::APPEND)
   end
 
   def call(env)
