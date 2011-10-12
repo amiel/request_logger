@@ -3,6 +3,10 @@ require "bundler"
 Bundler.setup
 Bundler.require
 
-require './request_logger'
+$: << File.expand_path(File.dirname(__FILE__) + '/lib')
+require 'request_logger'
+require 'app'
 
-run RequestLogger.new('requests.log')
+use RequestLogger, 'requests.log'
+
+run App

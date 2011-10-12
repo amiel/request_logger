@@ -1,17 +1,18 @@
 class RequestLogger
 
-  def initialize(filename)
+  def initialize(app, filename)
+    @app = app
     @f = File.open(filename, 'w+')
   end
 
   def call(env)
     print_request env
-    [200, { 'Content-Type' => 'text/plain' }, [' ']]
+    @app.call(env)
   end
 
 
   def log(str)
-    str = "[#{ Time.now.to_s }] #{ str }"
+    str = "[#{ Time.now.to_s }] #{ str }" unless str.nil?
     @f.puts str
     @f.flush
   end
@@ -27,7 +28,10 @@ class RequestLogger
       end
     end
 
+    log "== DATA =="
+    log env['rack.input'].read
     log "==== END REQUEST ===="
 
+    log nil
   end
 end
