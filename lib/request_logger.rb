@@ -1,20 +1,24 @@
+require 'logger'
+
 class RequestLogger
 
-  def initialize(app, filename)
+  def initialize(app, filename = STDERR)
     @app = app
-    @f = File.open(filename, File::WRONLY | File::CREAT | File::APPEND)
+    @logger = Logger.new(filename)
+    @logger.formatter = proc { |severity, datetime, progname, msg|
+      "#{datetime}: #{msg}\n"
+    }
   end
 
   def call(env)
     print_request env
+
     @app.call(env)
   end
 
 
   def log(str)
-    str = "[#{ Time.now.to_s }] #{ str }" unless str.nil?
-    @f.puts str
-    @f.flush
+    @logger.info str
   end
 
   def print_request(env)
