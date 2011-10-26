@@ -1,3 +1,17 @@
 This simple Rack app just logs to stdout each request it receives.
 
+You can also use this as middleware, like this:
+
+  require 'request_logger'
+  use RequestLogger
+  run Sinatra::Application
+
+
+- or -
+
+  require 'request_logger'
+  use RequestLogger, 'log/requests.log'
+  run Sinatra::Application
+
+
 This is great for troubleshooting requests.
